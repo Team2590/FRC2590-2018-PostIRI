@@ -15,7 +15,6 @@ import java.util.concurrent.locks.ReentrantLock;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
-import edu.wpi.first.wpilibj.HLUsageReporting;
 import edu.wpi.first.wpilibj.PIDInterface;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
@@ -25,7 +24,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.filters.LinearDigitalFilter;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.util.BoundaryException;
+import edu.wpi.first.hal.util.BoundaryException;
 
 /**
  * Class implements a PID Control Loop.
@@ -191,7 +190,6 @@ public class PIDTurnController extends SendableBase implements PIDInterface, Sen
     m_controlLoop.schedule(new PIDTurnTask(this), 0L, (long) (m_period * 1000));
 
     instances++;
-    HLUsageReporting.reportPIDController(instances);
     m_tolerance = new NullTolerance();
     setName("PIDController", instances);
   }
@@ -866,7 +864,6 @@ public class PIDTurnController extends SendableBase implements PIDInterface, Sen
   /**
    * Begin running the PIDController.
    */
-  @Override
   public void enable() {
     m_thisMutex.lock();
     try {
@@ -879,7 +876,6 @@ public class PIDTurnController extends SendableBase implements PIDInterface, Sen
   /**
    * Stop running the PIDController, this sets the output to zero before stopping.
    */
-  @Override
   public void disable() {
     // Ensures m_enabled check and pidWrite() call occur atomically
     m_pidWriteMutex.lock();
@@ -911,7 +907,6 @@ public class PIDTurnController extends SendableBase implements PIDInterface, Sen
   /**
    * Return true if PIDController is enabled.
    */
-  @Override
   public boolean isEnabled() {
     m_thisMutex.lock();
     try {

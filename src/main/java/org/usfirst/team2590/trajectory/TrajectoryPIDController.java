@@ -7,7 +7,6 @@ import java.util.TimerTask;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
-import edu.wpi.first.wpilibj.HLUsageReporting;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.Timer;
@@ -16,7 +15,7 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindowSendable;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.tables.ITable;
 import edu.wpi.first.wpilibj.tables.ITableListener;
-import edu.wpi.first.wpilibj.util.BoundaryException;
+import edu.wpi.first.hal.util.BoundaryException;
 
 /**
  * Class implements a PID Control Loop.
@@ -187,7 +186,6 @@ public class TrajectoryPIDController implements LiveWindowSendable {
     m_controlLoop.schedule(new TrajectoryPIDTask(this), 0L, (long) (m_period * 1000));
 
     instances++;
-    HLUsageReporting.reportPIDController(instances);
     m_tolerance = new NullTolerance();
 
     m_buf = new ArrayDeque<Double>(m_bufLength+1);
