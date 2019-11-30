@@ -13,6 +13,8 @@ import org.usfirst.frc.team2590.util.AveragingQueue;
 import org.usfirst.frc.team2590.util.NemesisDrive;
 import org.usfirst.team2590.settings.DriveTrainSettings;
 
+import javax.management.RuntimeErrorException;
+
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
@@ -104,8 +106,72 @@ public class Drivetrain implements DriveTrainSettings , RobotMap {
   private double fixedHeading = 0;
   private boolean forward;
   private boolean lastOn;
-  
+
+  public void init() {
+	VelocityController v1 = new VelocityController(0.1, 0.053);
+
+	//motors
+	  NemesisTalonSRX lm = new NemesisTalonSRX(leftSideDriveMID);
+	  VictorSPX ls = new VictorSPX(leftSideDriveSID);
+
+	  NemesisTalonSRX rm = new NemesisTalonSRX(rightSideDriveMID);
+	  VictorSPX rs = new VictorSPX(rightSideDriveSID);
+
+	  setAllMode(true);
+
+	  NemesisDrive d1 = new NemesisDrive();
+
+	  //sensors
+	  ADXRS450_Gyro g = new ADXRS450_Gyro(); //$"Gyro on the Fetus hahahaha" - Mr. Wolfe
+
+	  Encoder le = new Encoder(leftSideEncoderB, leftSideEncoderA);
+	  Encoder re  = new Encoder(rightSideEncoderB, rightSideEncoderA);
+
+	//piston to engage and disengage the pto (power take off)
+	Solenoid sol = new Solenoid(PTOSol);
+
+
+	this.init(v1, lm, ls, rm, rs, d1, g, le, re, sol);
+  }
+
+  public void init(VelocityController velocityCtl, 
+					NemesisTalonSRX leftMaster,  
+					VictorSPX leftSlave,
+					NemesisTalonSRX rightMaster,
+					VictorSPX rightSlave,
+					NemesisDrive drv,
+					ADXRS450_Gyro g1,
+					Encoder le,
+					Encoder re,
+					Solenoid sol) {
+				
+		//controller
+		currentController = velocityCtl;
+
+		//motors: left
+		leftDriveMaster = leftMaster;
+		leftDriveSlave = leftSlave;
+
+		//motors: right
+		rightDriveMaster = rightMaster;
+		rightDriveSlave = rightSlave;
+
+		// encoders
+		driver = drv;
+
+		//sensors
+		gyro = g1;
+
+		// encoders
+		leftDriveEncoder = le;
+		rightDriveEncoder = re;
+
+		PTO = sol;
+
+  }
+
 	public Drivetrain() {
+  
 
 	  //variables
 	  turnPower = 0;
@@ -115,27 +181,11 @@ public class Drivetrain implements DriveTrainSettings , RobotMap {
 	  forward = false;
 	  straightPower = 0;
 	  driveSetpoint = 0;
-	  currentController = new VelocityController(0.1, 0.053);
 
-	  //motors
-		leftDriveMaster = new NemesisTalonSRX(leftSideDriveMID);
-		leftDriveSlave = new VictorSPX(leftSideDriveSID);
-
-		rightDriveMaster = new NemesisTalonSRX(rightSideDriveMID);
-		rightDriveSlave = new VictorSPX(rightSideDriveSID);
 
 		leftDriveSlave.follow(leftDriveMaster);
 		rightDriveSlave.follow(rightDriveMaster);
 
-		setAllMode(true);
-
-		driver = new NemesisDrive();
-
-		//sensors
-		gyro = new ADXRS450_Gyro(); //$"Gyro on the Fetus hahahaha" - Mr. Wolfe
-
-		leftDriveEncoder = new Encoder(leftSideEncoderB, leftSideEncoderA);
-		rightDriveEncoder = new Encoder(rightSideEncoderB, rightSideEncoderA);
 
 		leftDriveEncoder.setDistancePerPulse(1.0/360.0 * (WheelDiameter * Math.PI));
     rightDriveEncoder.setDistancePerPulse(1.0/360.0 * (WheelDiameter * Math.PI));
@@ -151,8 +201,7 @@ public class Drivetrain implements DriveTrainSettings , RobotMap {
     rightDriveSlave.setInverted(false);
 
     latchingBoolean = false;
-    //piston to engage and disengage the pto (power take off)
-    PTO = new Solenoid(PTOSol);
+
 
     leftSideController = new EnhancedProfileCreator(new ControlPresets(straightProfileKP, straightProfileKF, 0.0001,
                                                                       maxVelStraight, maxAccStraight));

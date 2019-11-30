@@ -28,14 +28,14 @@ import org.usfirst.frc.team2590.usbVision.CameraPresets;
 import org.usfirst.frc.team2590.util.NemesisJoystick;
 
 import edu.wpi.first.wpilibj.Compressor;
-import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * The main class for FRC 2590s 2018 Robot Code
  * @authors Connor_Hofenbitzer, Harsh Padhye, Chinmay Savanur
  */
-public class Robot extends IterativeRobot {
+public class Robot extends TimedRobot {
 
   //misc
 
