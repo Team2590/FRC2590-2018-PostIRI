@@ -1,4 +1,4 @@
-package org.usfirst.frc.org.usfirst.frc.team2590.subsystems;
+package org.usfirst.frc.team2590.subsystems;
 
 import org.usfirst.frc.team2590.subsystems.Intake;
 import java.util.List;
@@ -11,8 +11,8 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
-import org.mockito.exceptions.misusing.UnnecessaryStubbingException;
+//import org.mockito.MockitoAnnotations;
+//import org.mockito.exceptions.misusing.UnnecessaryStubbingException;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
