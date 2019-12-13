@@ -172,7 +172,7 @@ public class Intake implements RobotMap, IntakeSettings {
         break;
     }
 
-     SmartDashboard.putBoolean("HasBox", checkBox());
+//     SmartDashboard.putBoolean("HasBox", checkBox());
   }
 
 

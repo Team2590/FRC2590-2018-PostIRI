@@ -1,6 +1,5 @@
 package org.usfirst.frc.team2590.subsystems;
 
-import org.usfirst.frc.team2590.subsystems.Intake;
 import java.util.List;
 
 import org.junit.After;
@@ -47,7 +46,7 @@ public class IntakeTest {
      */
     @Test
     public void testIntakeBoxFound() {
-  
+        Assert.assertEquals(1, 1);
         // These lines tell our 'mock sensors' what values to return when getVoltage() is called on
         // them by our Intake class in order to exercise the logic we're targeting in our test.
         Mockito.when(leftBox.getVoltage()).thenReturn(2.0);
@@ -91,6 +90,7 @@ public class IntakeTest {
        System.out.println("Intake state 4: " + intake.getIntakeState());
        Assert.assertEquals(intake.getIntakeState().toString(), "STOPPED");
 
+       
        // Now, act as if we've released the box.
        // this is done by setting the box sensors to return 0 indicating no box found.  Then call our update() method
        // and verify that we will indeed drop current to zero.  
@@ -135,7 +135,26 @@ public class IntakeTest {
 
        Assert.assertEquals(intake.getIntakeState().toString(), "INTAKE_IN");
     }
+    @Test
+    public void testAutonIntake() {
 
+        ArgumentCaptor<ControlMode> argument1 = ArgumentCaptor.forClass(ControlMode.class);
+        ArgumentCaptor<Double> argument2 = ArgumentCaptor.forClass(Double.class);
+
+        intake.init(leftMotorMock, rightMotorMock, leftBox, rightBox);
+        intake.autonSucc();
+
+        System.out.println("Intake state: " + intake.getIntakeState());
+      // Now do the same but for the right motor.  should be the same.
+      Mockito.verify(leftMotorMock, Mockito.times(1)).set(argument1.capture(), argument2.capture());
+      System.out.println("After spitting out box, right motor value: " + argument2.getValue());
+      Assert.assertEquals((Double)(0.0), argument2.getValue());
+      intake.update(0.1);
+      Mockito.verify(leftMotorMock, Mockito.times(2)).set(argument1.capture(), argument2.capture());
+      System.out.println("After update, right motor value: " + argument2.getValue());
+      Assert.assertEquals((Double)0.35, argument2.getValue());
+
+    }
    /*  @Test
     public void testAdjustSpeedLeft() {
         Mockito.when(leftBox.getVoltage()).thenReturn(1.0);
