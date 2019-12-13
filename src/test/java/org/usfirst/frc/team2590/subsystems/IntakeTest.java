@@ -148,12 +148,12 @@ public class IntakeTest {
       // Commented out the following, since we do not actually set the motor speed to zero (or anything)
       // when we set the state.  It only happens when we call update().
       //Mockito.verify(leftMotorMock, Mockito.times(1)).set(argument1.capture(), argument2.capture());
-      System.out.println("After spitting out box, right motor value: " + argument2.getValue());
+      //System.out.println("After spitting out box, right motor value: " + argument2.getValue());
       //Assert.assertEquals((Double)(0.0), argument2.getValue());
 
       // Now we do the update.
       intake.update(0.1);
-      Mockito.verify(leftMotorMock, Mockito.times(2)).set(argument1.capture(), argument2.capture());
+      Mockito.verify(leftMotorMock, Mockito.times(1)).set(argument1.capture(), argument2.capture());
       System.out.println("After update, right motor value: " + argument2.getValue());
       Assert.assertEquals((Double)0.35, argument2.getValue());
 
