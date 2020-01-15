@@ -47,11 +47,35 @@ public class Intake implements RobotMap, IntakeSettings {
   private AveragingQueue systemAverageR;
 
   public Intake() {
+    // Creating classes for hardware is done in init() method.
+    // This allows for using mock classes in testing, and real classes with the robot.
+  }
 
-    //motors
-    intakeMotor_left = new VictorSPX(leftIntakeID);
-    intakeMotor_right = new VictorSPX(rightIntakeID);
+  /* Initialize, specifying instances of hardware classes.   Useful for mocks / testing */
+  public void init(VictorSPX il, VictorSPX ir, AnalogInput lb, AnalogInput rb) {
+    intakeMotor_left = il;
+    intakeMotor_right = ir;
+    leftBoxDetect = lb;
+    rightBoxDetect = rb;
 
+    this.configure();
+  }
+
+   /* Default initializer, will init robot hardware */
+   public void init() {
+
+        //motors
+        intakeMotor_left = new VictorSPX(leftIntakeID);
+        intakeMotor_right = new VictorSPX(rightIntakeID);
+  
+        //sensors
+        leftBoxDetect = new AnalogInput(leftBoxDetectorPin);
+        rightBoxDetect = new AnalogInput(rightBoxDetectorPin);
+
+        this.configure();
+    
+  }
+  public void configure() {
     intakeMotor_left.setNeutralMode(NeutralMode.Coast);
     intakeMotor_right.setNeutralMode(NeutralMode.Coast);
 
@@ -71,11 +95,7 @@ public class Intake implements RobotMap, IntakeSettings {
 
     intakeMotor_left.selectProfileSlot(0, 0);
     intakeMotor_right.selectProfileSlot(0, 1);
-
-    //sensors
-    leftBoxDetect = new AnalogInput(leftBoxDetectorPin);
-    rightBoxDetect = new AnalogInput(rightBoxDetectorPin);
-
+        
     leftBoxDetect.setName( "Left Intake detector");
     rightBoxDetect.setName("Right Intake detector");
 
@@ -83,6 +103,17 @@ public class Intake implements RobotMap, IntakeSettings {
     systemAverageL = new AveragingQueue(AVERAGING_QUEUE_LENGTH);
     systemAverageR = new AveragingQueue(AVERAGING_QUEUE_LENGTH);
 
+  }
+
+
+
+  // for testing
+  public double getLeftVoltage() {
+    return this.leftBoxDetect.getVoltage();
+  }
+
+  public String getIntakeState() {
+    return this.intakeState.toString();
   }
 
   /**
@@ -141,7 +172,7 @@ public class Intake implements RobotMap, IntakeSettings {
         break;
     }
 
-     SmartDashboard.putBoolean("HasBox", checkBox());
+//     SmartDashboard.putBoolean("HasBox", checkBox());
   }
 
 
@@ -159,6 +190,10 @@ public class Intake implements RobotMap, IntakeSettings {
   public void setAmps(double amps) {
     intakeMotor_left.set(ControlMode.Current, amps);
     intakeMotor_right.set(ControlMode.Current, amps);
+  }
+
+  public double getAmpsLeft() {
+    return intakeMotor_left.getOutputCurrent();
   }
 
 

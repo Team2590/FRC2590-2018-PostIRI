@@ -50,10 +50,20 @@ dependencies {
     nativeZip wpi.deps.vendor.jni(wpi.platforms.roborio)
     nativeDesktopZip wpi.deps.vendor.jni(wpi.platforms.desktop)
     testCompile 'junit:junit:4.12'
+    testCompile 'org.mockito:mockito-core:3.1.0'
     implementation files(
         'build/jars/CTRE_Phoenix.jar',
         'build/jars/CTRLib.jar',
      )
+}
+
+sourceSets {
+   test {
+     java.srcDir 'src/test/java'
+   }
+   main {
+     java.srcDir 'src/main/java'
+    }
 }
 
 // Setting up my Jar File. In this case, adding all libraries into the main jar ('fat jar')
